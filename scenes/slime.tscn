@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://dg4n7tp4d7q1y"]
 
 [ext_resource type="Texture2D" uid="uid://dsou7lsgmx7x8" path="res://assets/images/enemies/Slime_Green.png" id="1_371uh"]
+[ext_resource type="Script" uid="uid://7oliif5eyg2p" path="res://scripts/slime.gd" id="1_p2gj0"]
+[ext_resource type="PackedScene" uid="uid://cnjc7nq8dws52" path="res://scenes/health_bar.tscn" id="3_n6pvg"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p2gj0"]
 atlas = ExtResource("1_371uh")
@@ -138,7 +140,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_tyl0w")
 }],
-"loop": true,
+"loop": false,
 "name": &"dying",
 "speed": 5.0
 }, {
@@ -163,13 +165,30 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_371uh"]
 size = Vector2(18, 16)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_371uh"]
+radius = 100.0
+
 [node name="Slime" type="CharacterBody2D" unique_id=57197608]
 scale = Vector2(2, 2)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_p2gj0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1837001117]
 sprite_frames = SubResource("SpriteFrames_24adn")
-animation = &"idle"
+animation = &"dying"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=390136061]
 shape = SubResource("RectangleShape2D_371uh")
+
+[node name="sight" type="Area2D" parent="." unique_id=2106767373]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="sight" unique_id=615895916]
+shape = SubResource("CircleShape2D_371uh")
+
+[node name="HealthBar" parent="." unique_id=1220041603 instance=ExtResource("3_n6pvg")]
+position = Vector2(-9, -12)
+
+[connection signal="body_entered" from="sight" to="." method="_on_sight_body_entered"]
+[connection signal="body_exited" from="sight" to="." method="_on_sight_body_exited"]
